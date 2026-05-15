@@ -1,0 +1,36 @@
+version: "1.0"
+
+defaults:
+  on_no_match: deny
+  on_error: deny
+
+rules:
+  - name: "禁止 PII 数据输出"
+    priority: 200
+    condition:
+      any:
+        - field: "output.raw"
+          operator: "matches"
+          value: "(?i)\\b\\d{3}[-.]?\\d{2}[-.]?\\d{4}\\b"
+        - field: "output.raw"
+          operator: "matches"
+          value: "(?i)\\b\\d{17}[\\dXx]\\b"
+        - field: "output.raw"
+          operator: "matches"
+          value: "(?i)[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}"
+    action: deny
+    message: "输出包含个人身份信息(PII)，已拦截"
+    audit: true
+
+  - name: "允许查询公开数据"
+    priority: 50
+    condition:
+      all:
+        - field: "output.action"
+          operator: "equals"
+          value: "query"
+        - field: "output.datasource"
+          operator: "equals"
+          value: "public"
+    action: allow
+    audit: true

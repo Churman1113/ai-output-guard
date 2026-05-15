@@ -1,0 +1,93 @@
+version: "1.0"
+
+defaults:
+  on_no_match: allow
+  on_error: pass
+
+rules:
+  - name: "禁止 DROP/TRUNCATE 操作"
+    priority: 200
+    condition:
+      any:
+        - field: "output.query"
+          operator: "matches"
+          value: "(?i)\\b(DROP|TRUNCATE)\\b"
+        - field: "output.action"
+          operator: "in"
+          value: ["drop_table", "truncate_table"]
+    action: deny
+    message: "安全策略禁止执行 DROP/TRUNCATE 操作"
+    audit: true
+
+  - name: "禁止无 WHERE 的 DELETE/UPDATE"
+    priority: 190
+    condition:
+      all:
+        - field: "output.action"
+          operator: "in"
+          value: ["execute_sql", "run_query"]
+        - field: "output.query"
+          operator: "matches"
+          value: "(?i)\\b(DELETE|UPDATE)\\b(?!.*\\bWHERE\\b)"
+    action: deny
+    message: "禁止无 WHERE 条件的 DELETE/UPDATE 操作"
+    audit: true
+
+  - name: "禁止修改系统表"
+    priority: 180
+    condition:
+      all:
+        - field: "output.action"
+          operator: "in"
+          value: ["execute_sql", "run_query"]
+        - field: "output.query"
+          operator: "matches"
+          value: "(?i)\\b(pg_|information_schema|mysql|sys)\\."
+    action: deny
+    message: "禁止操作系统表"
+    audit: true
+
+  - name: "批量操作需确认"
+    priority: 150
+    condition:
+      all:
+        - field: "output.action"
+          operator: "in"
+          value: ["execute_sql", "run_query"]
+        - field: "output.query"
+          operator: "matches"
+          value: "(?i)\\b(DELETE|UPDATE)\\b.*\\bWHERE\\b"
+    action: ask_human
+    message: "即将执行 DELETE/UPDATE 操作，请确认 SQL 语句正确"
+    timeout: 120
+    fallback: deny
+    audit: true
+
+  - name: "ALTER TABLE 需确认"
+    priority: 140
+    condition:
+      all:
+        - field: "output.action"
+          operator: "in"
+          value: ["execute_sql", "run_query"]
+        - field: "output.query"
+          operator: "matches"
+          value: "(?i)\\bALTER\\s+TABLE\\b"
+    action: ask_human
+    message: "ALTER TABLE 操作会修改表结构，请确认"
+    timeout: 300
+    fallback: deny
+    audit: true
+
+  - name: "SELECT 查询自动放行"
+    priority: 50
+    condition:
+      all:
+        - field: "output.action"
+          operator: "in"
+          value: ["execute_sql", "run_query", "read_data"]
+        - field: "output.query"
+          operator: "matches"
+          value: "(?i)^\\s*SELECT\\b"
+    action: allow
+    audit: false

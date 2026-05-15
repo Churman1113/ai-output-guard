@@ -1,0 +1,29 @@
+version: "1.0"
+
+defaults:
+  on_no_match: allow
+  on_error: pass
+
+rules:
+  - name: "仅拦截 DROP TABLE"
+    priority: 200
+    condition:
+      field: "output.query"
+      operator: "matches"
+      value: "(?i)\\bDROP\\s+TABLE\\b"
+    action: deny
+    message: "即使在开发环境也不建议 DROP TABLE，请使用 DELETE 或 TRUNCATE"
+    audit: true
+
+  - name: "危险操作记录但不拦截"
+    priority: 100
+    condition:
+      any:
+        - field: "output.method"
+          operator: "equals"
+          value: "DELETE"
+        - field: "output.action"
+          operator: "equals"
+          value: "execute_shell"
+    action: allow
+    audit: true
