@@ -18,7 +18,6 @@ from agentguard.api.models import (
     AuditResponse,
     AuditEntry,
     StatusResponse,
-    ErrorResponse,
     CheckDetail,
 )
 

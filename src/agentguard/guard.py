@@ -14,12 +14,10 @@ from pydantic import BaseModel
 
 from agentguard.result import GuardLevel, CheckResult, GuardResult
 from agentguard.config import GuardConfig
-from agentguard.errors import ConfigError
 from agentguard.schema_guard import SchemaGuard
 from agentguard.semantic_guard import SemanticGuard
 from agentguard.policy_guard import PolicyGuard
 from agentguard.audit.logger import AuditLogger, AuditEntry
-from agentguard.semantic.intent_registry import IntentRegistry
 
 
 class Guard:

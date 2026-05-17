@@ -7,13 +7,11 @@ that match known LLM API patterns; all other requests are forwarded directly.
 from __future__ import annotations
 
 import json
-import time
 from typing import Any
 
 import httpx
 
 from agentguard import Guard
-from agentguard.result import GuardLevel
 from agentguard.proxy.router import match_route, extract_content
 from agentguard.proxy.transformer import transform_response
 
@@ -69,15 +67,6 @@ class ProxyInterceptor:
         # Non-LLM request — forward without guard validation
         if route is None:
             return await self._forward_direct(method, url, headers, body)
-
-        # Extract request body as string for context
-        request_text = ""
-        if body:
-            try:
-                body_dict = json.loads(body)
-                request_text = extract_content(body_dict, route.request_content_path) if route.request_content_path else ""
-            except (json.JSONDecodeError, TypeError):
-                request_text = body.decode("utf-8", errors="replace")[:500]
 
         # Forward to LLM API
         status_code, resp_headers, resp_body = await self._forward_direct(

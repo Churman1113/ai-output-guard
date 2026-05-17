@@ -49,7 +49,7 @@ class SchemaGuard:
                 return CheckResult(
                     layer="schema",
                     level=GuardLevel.DENY,
-                    message=f"JSON parse error: input is not valid JSON",
+                    message="JSON parse error: input is not valid JSON",
                     original=raw,
                     confidence=1.0,
                 )

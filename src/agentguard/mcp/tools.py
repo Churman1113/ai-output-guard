@@ -8,7 +8,6 @@ from __future__ import annotations
 
 import json
 import os
-import time
 from pathlib import Path
 from typing import Any
 
@@ -265,7 +264,7 @@ def tool_guard_list_policies(args: dict, policy_path: str | None = None, shared_
     for ext in ("*.yaml", "*.yml"):
         for p in sorted(scan_dir.glob(ext)):
             try:
-                content = p.read_text(encoding="utf-8")
+                _ = p.read_text(encoding="utf-8")
                 # Quick parse to extract version/name without full loading
                 from agentguard.policy_guard import PolicyGuard
                 pg = PolicyGuard.from_file(str(p))

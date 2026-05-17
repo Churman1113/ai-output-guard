@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-from typing import Any
 
 
 def levenshtein_distance(s1: str, s2: str) -> int:

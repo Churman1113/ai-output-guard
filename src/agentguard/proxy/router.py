@@ -6,8 +6,7 @@ extraction rules to pull generated text from API responses.
 
 from __future__ import annotations
 
-import json
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Any
 
 
