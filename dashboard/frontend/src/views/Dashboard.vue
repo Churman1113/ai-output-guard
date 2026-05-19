@@ -231,7 +231,7 @@ function badgeClass(level: string): string {
                 class="border-b border-gray-50 hover:bg-gray-50"
               >
                 <td class="py-2.5 text-gray-400 text-xs">
-                  {{ new Date(entry.timestamp * 1000).toLocaleString() }}
+                  {{ new Date(Number(entry.timestamp) * 1000).toLocaleString() }}
                 </td>
                 <td class="py-2.5">
                   <span :class="badgeClass(entry.result)">

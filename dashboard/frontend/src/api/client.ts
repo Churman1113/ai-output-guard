@@ -53,3 +53,44 @@ export async function validateFile(
     body: JSON.stringify({ output: filePath, context: { source: "file" } }),
   });
 }
+
+/** 更新策略 YAML */
+export async function updatePolicy(
+  policyYaml: string
+): Promise<{ status: string; rules_loaded: number; message: string }> {
+  return request("/policy", {
+    method: "POST",
+    body: JSON.stringify({ policy: policyYaml }),
+  });
+}
+
+/** 添加自定义意图 */
+export async function addIntent(data: {
+  name: string;
+  category: string;
+  severity: string;
+  patterns: string[];
+  description?: string;
+}): Promise<{ status: string; message: string }> {
+  return request("/intents", {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+}
+
+/** 获取健康检查状态 */
+export async function getHealth(): Promise<{
+  status: string;
+  server: string;
+  version: string;
+}> {
+  return request("/health");
+}
+
+/** 导出审计日志（与 getAudit 相同端点，用于导出场景） */
+export async function exportAudit(
+  limit?: number,
+  level?: string
+): Promise<AuditResponse> {
+  return getAudit(limit ?? 50, level);
+}
