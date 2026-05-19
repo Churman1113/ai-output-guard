@@ -7,7 +7,7 @@ name = "agentguard"
 version = "0.1.0"
 description = "AI Output Safety Middleware — the seatbelt between LLMs and your systems"
 readme = "README.md"
-license = { text = "MIT" }
+license = "MIT"
 authors = [{ name = "AgentGuard Team" }]
 requires-python = ">=3.9"
 classifiers = [
@@ -52,18 +52,18 @@ agentguard = "agentguard.cli.main:app"
 agentguard-mcp = "agentguard.mcp.server:main"
 agentguard-api = "agentguard.api.server:main"
 agentguard-proxy = "agentguard.proxy.server:main"
-agentguard-dashboard = "dashboard.backend.main:main"
 
 [project.urls]
-Homepage = "https://github.com/agentguard/agentguard"
-Documentation = "https://github.com/agentguard/agentguard/docs"
-Repository = "https://github.com/agentguard/agentguard"
+Homepage = "https://github.com/Churman1113/AgentGuard"
+Documentation = "https://github.com/Churman1113/AgentGuard#readme"
+Repository = "https://github.com/Churman1113/AgentGuard"
+Issues = "https://github.com/Churman1113/AgentGuard/issues"
 
 [tool.setuptools.packages.find]
 where = ["src"]
 
 [tool.setuptools.package-data]
-agentguard = []
+agentguard = ["py.typed"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

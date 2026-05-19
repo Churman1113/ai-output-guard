@@ -2,9 +2,11 @@
 
 **AI 输出安全中间件 — 插在 LLM 和用户之间的安全带**
 
+[![PyPI version](https://img.shields.io/pypi/v/agentguard.svg)](https://pypi.org/project/agentguard/)
 [![Python](https://img.shields.io/badge/python-%3E%3D3.9-blue)](https://python.org)
 [![Tests](https://img.shields.io/badge/tests-228%20passed-green)](tests/)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
+[![GitHub Stars](https://img.shields.io/github/stars/Churman1113/AgentGuard?style=social)](https://github.com/Churman1113/AgentGuard)
 
 ---
 
@@ -20,7 +22,22 @@ LLM 输出  ──→  [Schema Guard]  ──→  [Semantic Guard]  ──→  [
                   auto-fix           keyword+regex           YAML DSL 引擎
 ```
 
-## 快速开始
+## 5 分钟快速开始
+
+### 安装
+
+```bash
+# 核心（Python SDK + CLI）
+pip install agentguard
+
+# 含语义增强（sentence-transformers）
+pip install agentguard[semantic]
+
+# 全部依赖（含异步支持）
+pip install agentguard[all]
+```
+
+### 快速使用
 
 ```python
 from agentguard import Guard
@@ -46,19 +63,6 @@ elif result.blocked:
     log_and_alert(result) # 被拦截，查看 blocked_by
 elif result.was_fixed:
     use(result.output)    # 自动修复了，检查 fixes
-```
-
-## 安装
-
-```bash
-# 核心（Python SDK + CLI）
-pip install agentguard
-
-# 含语义增强（sentence-transformers）
-pip install agentguard[semantic]
-
-# 全部依赖（含异步支持）
-pip install agentguard[all]
 ```
 
 ## 三层 Guard
@@ -113,19 +117,6 @@ rules:
       value: 1000000
     action: warn
     message: "Large response detected"
-
-  - name: flag-external-ssh
-    priority: 80
-    condition:
-      any:
-        - field: target_host
-          operator: not_in
-          value: [10.0.0.0/8, 172.16.0.0/12]
-        - field: protocol
-          operator: equals
-          value: ssh
-    action: ask_human
-    message: "SSH to external host requires approval"
 ```
 
 ## CLI 用法
@@ -160,7 +151,8 @@ agentguard/
 │   ├── cli/               # Typer CLI（Rich 格式化）
 │   ├── api/               # FastAPI REST API（validate/policy/audit）
 │   ├── proxy/             # API Proxy（零侵入 LLM 安全层）
-│   └── mcp/               # MCP Server（JSON-RPC 2.0 协议）
+│   ├── mcp/               # MCP Server（JSON-RPC 2.0 协议）
+│   └── billing/           # 计费系统（可选）
 ├── docs/                  # 产品定义 / 架构 / API / 策略模板 / 协议流程 / 评估
 ├── examples/              # 杀手级 Demo + 策略示例
 ├── tests/                 # 300+ 测试用例
@@ -168,17 +160,6 @@ agentguard/
 ├── docker-compose.yml     # 团队一键部署
 └── pyproject.toml
 ```
-
-## 路线图
-
-| 阶段 | 内容 | 状态 |
-|:---|:---|:---|
-| Phase 1 | Python SDK + CLI + 测试 | ✅ 完成 |
-| Phase 2 | MCP Server（IDE 生态接入） | ✅ 完成 |
-| Phase 2.5 | Schema Guard 增强（类型修复/枚举匹配/嵌套校验） | ✅ 完成 |
-| Phase 3 | API Proxy（零侵入安全层） | ✅ 完成 |
-| Phase 3b | LSP Server（编辑器原生诊断） | 📋 规划中 |
-| Phase 4 | Dashboard + PyPI 发布 | 📋 规划中 |
 
 ## 协议分发
 
@@ -206,6 +187,23 @@ export HTTP_PROXY=http://localhost:8080
 export HTTPS_PROXY=http://localhost:8080
 # 之后所有 AI 工具的 LLM 请求自动经过 AgentGuard 校验
 ```
+
+## 路线图
+
+| 阶段 | 内容 | 状态 |
+|:---|:---|:---|
+| Phase 1 | Python SDK + CLI + 测试 | ✅ 完成 |
+| Phase 2 | MCP Server（IDE 生态接入） | ✅ 完成 |
+| Phase 2.5 | Schema Guard 增强（类型修复/枚举匹配/嵌套校验） | ✅ 完成 |
+| Phase 3 | API Proxy（零侵入安全层） | ✅ 完成 |
+| Phase 3b | LSP Server（编辑器原生诊断） | 📋 规划中 |
+| Phase 4 | Dashboard + PyPI 发布 | 📋 进行中 |
+
+## 支持我们
+
+如果你觉得 AgentGuard 有用，请给我们一个 ⭐！
+
+[![GitHub Stars](https://img.shields.io/github/stars/Churman1113/AgentGuard?style=social)](https://github.com/Churman1113/AgentGuard)
 
 ## License
 
