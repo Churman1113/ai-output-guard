@@ -1,0 +1,117 @@
+{
+  "name": "agentguard",
+  "displayName": "AgentGuard",
+  "description": "AI output safety — detects dangerous LLM output directly in your editor",
+  "version": "0.1.0",
+  "publisher": "agentguard",
+  "license": "MIT",
+  "icon": "icon.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/agentguard/agentguard"
+  },
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Linters",
+    "Security",
+    "Programming Languages"
+  ],
+  "keywords": [
+    "ai-safety",
+    "llm",
+    "guardrails",
+    "security",
+    "linter"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "agentguard.validateSelection",
+        "title": "AgentGuard: Validate Selection"
+      },
+      {
+        "command": "agentguard.validateFile",
+        "title": "AgentGuard: Validate Current File"
+      },
+      {
+        "command": "agentguard.showAudit",
+        "title": "AgentGuard: Show Audit Log"
+      },
+      {
+        "command": "agentguard.clearDiagnostics",
+        "title": "AgentGuard: Clear All Diagnostics"
+      }
+    ],
+    "configuration": {
+      "title": "AgentGuard",
+      "properties": {
+        "agentguard.policyPath": {
+          "type": "string",
+          "default": "",
+          "description": "Path to a YAML policy file for custom guard rules"
+        },
+        "agentguard.enableSemantic": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable semantic safety checking (keyword + regex pattern matching)"
+        },
+        "agentguard.enableDiagnostics": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show inline diagnostics (wavy lines) for dangerous AI output"
+        },
+        "agentguard.guardDaemonUrl": {
+          "type": "string",
+          "default": "http://127.0.0.1:8765",
+          "description": "URL of the AgentGuard daemon (start with: agentguard-daemon)"
+        },
+        "agentguard.dangerousIntents": {
+          "type": "array",
+          "items": { "type": "string" },
+          "default": [],
+          "description": "Specific dangerous intents to block (empty = block all critical/high)"
+        }
+      }
+    },
+    "keybindings": [
+      {
+        "command": "agentguard.validateSelection",
+        "key": "ctrl+alt+g v",
+        "when": "editorTextFocus"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "agentguard.validateSelection",
+          "group": "AgentGuard@1"
+        }
+      ]
+    },
+    "diagnosticTags": {
+      "error": [" AgentGuard "],
+      "warning": [" AgentGuard "]
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "lint": "eslint src --ext ts",
+    "test": "npm run test:compile && node --test out-test/test/*.test.js",
+    "test:compile": "tsc -p tsconfig.test.json",
+    "test:python": "cd .. && python -m pytest tests/ -q",
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/vscode": "^1.85.0",
+    "typescript": "^5.3.0",
+    "@vscode/test-electron": "^2.3.0"
+  }
+}

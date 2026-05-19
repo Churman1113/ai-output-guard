@@ -1,0 +1,25 @@
+version: "3.8"
+
+services:
+  proxy:
+    build: .
+    image: agentguard/proxy:latest
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./examples/policy-examples:/policies:ro
+      - audit-data:/data
+    environment:
+      - AGENTGUARD_POLICY=/policies/enterprise-compliance.yaml
+      - AGENTGUARD_HOST=0.0.0.0
+      - AGENTGUARD_PORT=8080
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8080/health')"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+volumes:
+  audit-data:

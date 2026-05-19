@@ -1,0 +1,70 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "agentguard"
+version = "0.1.0"
+description = "AI Output Safety Middleware — the seatbelt between LLMs and your systems"
+readme = "README.md"
+license = { text = "MIT" }
+authors = [{ name = "AgentGuard Team" }]
+requires-python = ">=3.9"
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Topic :: Security",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+keywords = ["ai-safety", "llm", "guardrails", "output-validation", "agent"]
+
+dependencies = [
+    "pydantic>=2.0",
+    "pyyaml>=6.0",
+    "typer>=0.9,<1.0",
+]
+
+[project.optional-dependencies]
+api = [
+    "fastapi>=0.100",
+    "uvicorn[standard]>=0.23",
+]
+proxy = [
+    "agentguard[api]",
+    "httpx>=0.25",
+]
+semantic = [
+    "sentence-transformers>=2.2",
+]
+all = [
+    "agentguard[semantic]",
+    "agentguard[proxy]",
+    "aiohttp>=3.9",
+]
+
+[project.scripts]
+agentguard = "agentguard.cli.main:app"
+agentguard-mcp = "agentguard.mcp.server:main"
+agentguard-api = "agentguard.api.server:main"
+agentguard-proxy = "agentguard.proxy.server:main"
+agentguard-dashboard = "dashboard.backend.main:main"
+
+[project.urls]
+Homepage = "https://github.com/agentguard/agentguard"
+Documentation = "https://github.com/agentguard/agentguard/docs"
+Repository = "https://github.com/agentguard/agentguard"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+agentguard = []
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
