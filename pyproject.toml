@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "ai-output-guard"
-version = "0.1.0"
+version = "0.1.1"
 description = "AI Output Safety Middleware — the seatbelt between LLMs and your systems"
 readme = "README.md"
 license = "MIT"
@@ -37,15 +37,15 @@ api = [
     "uvicorn[standard]>=0.23",
 ]
 proxy = [
-    "agentguard[api]",
+    "ai-output-guard[api]",
     "httpx>=0.25",
 ]
 semantic = [
     "sentence-transformers>=2.2",
 ]
 all = [
-    "agentguard[semantic]",
-    "agentguard[proxy]",
+    "ai-output-guard[semantic]",
+    "ai-output-guard[proxy]",
     "aiohttp>=3.9",
 ]
 
