@@ -37,4 +37,8 @@ def create_app(policy_path: Optional[str] = None) -> FastAPI:
     from agentguard.api.routes import router
     app.include_router(router, prefix="/api/v1")
 
+    # Register billing routes
+    from agentguard.api.billing_routes import router as billing_router
+    app.include_router(billing_router, prefix="/api/v1")
+
     return app

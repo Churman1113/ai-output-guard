@@ -1,43 +1,42 @@
 # AgentGuard
 
-**AI 输出安全中间件 — 插在 LLM 和用户之间的安全带**
+**AI Output Safety Engine — The seatbelt between LLMs and your systems**
 
-[![PyPI version](https://img.shields.io/pypi/v/agentguard.svg)](https://pypi.org/project/agentguard/)
 [![Python](https://img.shields.io/badge/python-%3E%3D3.9-blue)](https://python.org)
-[![Tests](https://img.shields.io/badge/tests-228%20passed-green)](tests/)
+[![Tests](https://img.shields.io/badge/tests-479%20passed-green)](tests/)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![GitHub Stars](https://img.shields.io/github/stars/Churman1113/AgentGuard?style=social)](https://github.com/Churman1113/AgentGuard)
 
 ---
 
-## 为什么需要 AgentGuard？
+## Why AgentGuard?
 
-LLM 输出不可靠。JSON 字段缺失、幻觉 API、绕过权限 —— 任何一类问题都可能导致生产事故。
+LLM outputs are unreliable. Missing JSON fields, hallucinated APIs, permission bypasses — any of these can cause production incidents.
 
-AgentGuard 提供**三层递进校验**（结构 → 语义 → 策略），在 AI 输出到达你的系统之前拦截问题。
+AgentGuard provides a **three-layer progressive validation pipeline** (Schema → Semantic → Policy) to catch problems before AI output reaches your systems.
 
 ```
-LLM 输出  ──→  [Schema Guard]  ──→  [Semantic Guard]  ──→  [Policy Guard]  ──→  安全输出
-                  结构校验           危险意图检测             策略规则匹配
-                  auto-fix           keyword+regex           YAML DSL 引擎
+LLM Output  ──→  [Schema Guard]  ──→  [Semantic Guard]  ──→  [Policy Guard]  ──→  Safe Output
+                  Structure check        Intent detection         Policy rules
+                  auto-fix               keyword+regex            YAML DSL engine
 ```
 
-## 5 分钟快速开始
+## Quick Start
 
-### 安装
+### Install
 
 ```bash
-# 核心（Python SDK + CLI）
+# Core (Python SDK + CLI)
 pip install agentguard
 
-# 含语义增强（sentence-transformers）
+# With semantic enhancement (sentence-transformers)
 pip install agentguard[semantic]
 
-# 全部依赖（含异步支持）
+# All extras (proxy, API, semantic)
 pip install agentguard[all]
 ```
 
-### 快速使用
+### Use
 
 ```python
 from agentguard import Guard
@@ -47,47 +46,48 @@ class APIResponse(BaseModel):
     action: str
     target: str
 
-# 一行初始化，三层全开
+# One-line initialization, all three layers active
 guard = Guard(
-    schema=APIResponse,          # 结构校验 + 自动修复
-    semantic=True,               # 危险意图检测
-    policy="policies/prod.yaml", # 策略规则匹配
+    schema=APIResponse,          # Schema validation + auto-fix
+    semantic=True,               # Dangerous intent detection
+    policy="policies/prod.yaml", # Policy rule matching
 )
 
-# 校验 LLM 输出
+# Validate LLM output
 result = guard.validate('{"action": "DROP TABLE users", "target": "*"}')
 
 if result.passed:
-    use(result.output)    # 安全，直接用
+    use(result.output)    # Safe to use
 elif result.blocked:
-    log_and_alert(result) # 被拦截，查看 blocked_by
+    log_and_alert(result) # Blocked — check blocked_by
 elif result.was_fixed:
-    use(result.output)    # 自动修复了，检查 fixes
+    use(result.output)    # Auto-fixed — review fixes
 ```
 
-## 三层 Guard
+## Three Guard Layers
 
-### 1. Schema Guard — 结构校验
+### 1. Schema Guard — Structure Validation
 
-- 支持 Pydantic v2 模型和原始 JSON Schema
-- 自动修复：enum 模糊匹配、类型转换、缺失字段填充、多余字段裁剪
-- `<1ms` 延迟
+- Supports Pydantic v2 models and raw JSON Schema
+- Auto-fix: enum fuzzy matching (Levenshtein), type coercion, missing field defaults, extra field stripping
+- Nested object recursive fixing and array item type coercion
+- `<1ms` latency
 
-### 2. Semantic Guard — 语义检测
+### 2. Semantic Guard — Intent Detection
 
-- 33 个内置危险意图（drop_table、ssh_connect、expose_api_key 等）
-- 三级匹配：keyword（最快）→ regex → heuristic
-- `critical`/`high` 直接 DENY，`medium`/`low` 发 WARN
-- 零外部依赖
+- 25 built-in dangerous intents (drop_table, ssh_connect, expose_api_key, etc.)
+- Three-level matching: keyword (fastest) → regex → heuristic
+- `critical`/`high` → DENY, `medium`/`low` → WARN
+- Zero external dependencies
 
-### 3. Policy Guard — 策略引擎
+### 3. Policy Guard — Rule Engine
 
-- YAML DSL 定义规则，支持 14 个运算符
-- 逻辑组合：`all`(AND) / `any`(OR)
-- dot-notation 嵌套字段访问
-- 5 种动作：`allow` / `deny` / `warn` / `ask_human` / `modify`
+- YAML DSL with 14 operators
+- Logical combinators: `all` (AND) / `any` (OR)
+- Dot-notation nested field access
+- 5 actions: `allow` / `deny` / `warn` / `ask_human` / `modify`
 
-## 策略 DSL 示例
+## Policy DSL Example
 
 ```yaml
 version: "1.0"
@@ -117,91 +117,114 @@ rules:
       value: 1000000
     action: warn
     message: "Large response detected"
+
+  - name: flag-external-ssh
+    priority: 80
+    condition:
+      any:
+        - field: target_host
+          operator: not_in
+          value: [10.0.0.0/8, 172.16.0.0/12]
+        - field: protocol
+          operator: equals
+          value: ssh
+    action: ask_human
+    message: "SSH to external host requires approval"
 ```
 
-## CLI 用法
+## CLI Usage
 
 ```bash
-# 快速校验
+# Quick validation
 agentguard check '{"action": "read", "target": "users"}'
 
-# 文件校验 + 策略
+# File validation with policy
 agentguard validate response.json --policy prod.yaml -v
 
-# 策略文件校验
+# Policy file validation
 agentguard policy validate policies/prod.yaml
 ```
 
-## 项目结构
+## Distribution
 
-```
-agentguard/
-├── src/agentguard/
-│   ├── guard.py           # Guard 主入口（三层编排）
-│   ├── schema_guard.py    # Schema Guard（Pydantic+JSON Schema + 自动修复）
-│   ├── semantic_guard.py  # Semantic Guard（规则匹配）
-│   ├── policy_guard.py    # Policy Guard（YAML DSL 引擎）
-│   ├── result.py          # GuardLevel / CheckResult / GuardResult
-│   ├── config.py          # 配置管理
-│   ├── errors.py          # 统一异常体系
-│   ├── fix/               # 自动修复（enum/type/schema 递归嵌套）
-│   ├── semantic/          # 意图注册表 + 规则匹配器
-│   ├── policy/            # 策略引擎（actions/operators/parser/validator）
-│   ├── audit/             # 审计日志
-│   ├── cli/               # Typer CLI（Rich 格式化）
-│   ├── api/               # FastAPI REST API（validate/policy/audit）
-│   ├── proxy/             # API Proxy（零侵入 LLM 安全层）
-│   ├── mcp/               # MCP Server（JSON-RPC 2.0 协议）
-│   └── billing/           # 计费系统（可选）
-├── docs/                  # 产品定义 / 架构 / API / 策略模板 / 协议流程 / 评估
-├── examples/              # 杀手级 Demo + 策略示例
-├── tests/                 # 300+ 测试用例
-├── Dockerfile             # API Proxy Docker 镜像
-├── docker-compose.yml     # 团队一键部署
-└── pyproject.toml
-```
+AgentGuard can be used in 5 ways, covering every scenario:
 
-## 协议分发
-
-AgentGuard 设计为五种形态覆盖所有场景：
-
-| 形态 | 适用场景 | 侵入性 |
+| Form | Use Case | Integration |
 |:---|:---|:---|
-| **Python SDK** | openclaw/hermes 等 Python Agent 框架 | 2 行代码 |
-| **CLI** | CI/CD 流水线、脚本集成 | 零侵入 |
-| **MCP Server** | Cursor/Copilot/Claude Code 等 AI IDE | IDE 插件 |
-| **API Proxy** | 任意 LLM API 调用（零代码改动） | 改环境变量 |
-| **LSP Server** | VS Code 等编辑器原生诊断 | IDE 插件 |
+| **Python SDK** | Agent frameworks (LangChain, AutoGen, etc.) | 2 lines of code |
+| **CLI** | CI/CD pipelines, shell scripts | Zero intrusion |
+| **MCP Server** | Cursor, Copilot, Claude Code, Windsurf | IDE plugin config |
+| **API Proxy** | Any LLM API call (zero code changes) | Set HTTP_PROXY |
+| **VS Code Extension** | Editor-native diagnostics | Install from marketplace |
 
-### API Proxy 一键部署
+### API Proxy — One-Click Deploy
 
 ```bash
-# Docker 部署
+# Docker deployment
 docker run -d -p 8080:8080 \
   -v $(pwd)/policy.yaml:/policies/policy.yaml \
   -e AGENTGUARD_POLICY=/policies/policy.yaml \
   agentguard/proxy:latest
 
-# 客户端配置（零代码）
+# Client config (zero code)
 export HTTP_PROXY=http://localhost:8080
 export HTTPS_PROXY=http://localhost:8080
-# 之后所有 AI 工具的 LLM 请求自动经过 AgentGuard 校验
+# All LLM API calls are now validated by AgentGuard
 ```
 
-## 路线图
+## Project Structure
 
-| 阶段 | 内容 | 状态 |
+```
+agentguard/
+├── src/agentguard/
+│   ├── guard.py           # Main orchestrator (three-layer pipeline)
+│   ├── schema_guard.py    # Schema validation + auto-fix
+│   ├── semantic_guard.py  # Intent detection (rules)
+│   ├── policy_guard.py    # YAML DSL policy engine
+│   ├── result.py          # GuardLevel / CheckResult / GuardResult
+│   ├── config.py          # Configuration management
+│   ├── errors.py          # Exception hierarchy
+│   ├── fix/               # Auto-fix (enum/type/schema recursive)
+│   ├── semantic/          # Intent registry + rule matcher
+│   ├── policy/            # Policy engine (actions/operators/parser/validator)
+│   ├── audit/             # Audit logging
+│   ├── cli/               # Typer CLI (Rich formatting)
+│   ├── api/               # FastAPI REST API (validate/policy/audit/billing)
+│   ├── proxy/             # API Proxy (zero-intrusion LLM safety layer)
+│   ├── mcp/               # MCP Server (JSON-RPC 2.0 protocol)
+│   └── billing/           # Subscription management (Lemon Squeezy)
+├── lsp/                   # VS Code extension (TypeScript)
+├── dashboard/             # Web Dashboard (Vue 3 + FastAPI)
+├── docs/                  # Architecture, API reference, policy templates
+├── examples/              # Demo + policy examples
+├── tests/                 # 479+ test cases
+├── Dockerfile             # API Proxy Docker image
+├── docker-compose.yml     # One-command team deployment
+└── pyproject.toml
+```
+
+## Roadmap
+
+| Phase | Content | Status |
 |:---|:---|:---|
-| Phase 1 | Python SDK + CLI + 测试 | ✅ 完成 |
-| Phase 2 | MCP Server（IDE 生态接入） | ✅ 完成 |
-| Phase 2.5 | Schema Guard 增强（类型修复/枚举匹配/嵌套校验） | ✅ 完成 |
-| Phase 3 | API Proxy（零侵入安全层） | ✅ 完成 |
-| Phase 3b | LSP Server（编辑器原生诊断） | 📋 规划中 |
-| Phase 4 | Dashboard + PyPI 发布 | 📋 进行中 |
+| Phase 1 | Python SDK + CLI + Tests | ✅ Complete |
+| Phase 2 | MCP Server (IDE integration) | ✅ Complete |
+| Phase 2.5 | Schema Guard Enhancement (nested fix, advanced coercion, matching) | ✅ Complete |
+| Phase 3 | API Proxy (zero-intrusion) | ✅ Complete |
+| Phase 3b | VS Code Extension (editor diagnostics) | ✅ Complete |
+| Phase 4 | Dashboard + PyPI Release + Billing | ✅ Complete |
 
-## 支持我们
+## Pricing
 
-如果你觉得 AgentGuard 有用，请给我们一个 ⭐！
+| Tier | Price | Features |
+|:---|:---|:---|
+| **Community** | Free | SDK + CLI + MCP + LSP + Basic policies |
+| **Team** | $29/month | API Proxy + Dashboard + Team policies + Audit export |
+| **Enterprise** | Contact us | SSO/SAML + Custom deployment + SLA + Priority support |
+
+## Support Us
+
+If AgentGuard is useful to you, please give us a ⭐!
 
 [![GitHub Stars](https://img.shields.io/github/stars/Churman1113/AgentGuard?style=social)](https://github.com/Churman1113/AgentGuard)
 

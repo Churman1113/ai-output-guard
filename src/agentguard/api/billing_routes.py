@@ -8,8 +8,8 @@ from typing import Optional
 from fastapi import APIRouter, Depends, HTTPException, Request, Header
 from pydantic import BaseModel
 
-from agentguard.billing import LemonSqueezyClient, Subscription, SubscriptionTier
-from agentguard.billing.models import get_pricing, PRICING_CONFIG
+from agentguard.billing import LemonSqueezyClient, SubscriptionTier
+from agentguard.billing.models import get_pricing
 from agentguard.billing.webhooks import handle_webhook, verify_signature, WebhookError
 
 
@@ -64,13 +64,24 @@ class PortalResponse(BaseModel):
 
 
 # Dependency to get billing client
+def _check_billing_configured():
+    """Raise 500 if billing is not configured."""
+    if not LEMONSQUEEZY_STORE_ID:
+        raise HTTPException(500, "Billing not configured")
+    if not os.environ.get("LEMONSQUEEZY_API_KEY"):
+        raise HTTPException(500, "Billing not configured")
+
+
 async def get_billing_client() -> LemonSqueezyClient:
     """Get Lemon Squeezy client."""
+    _check_billing_configured()
+    client = None
     try:
         client = LemonSqueezyClient()
         yield client
     finally:
-        await client.close()
+        if client is not None:
+            await client.close()
 
 
 @router.get("/pricing", response_model=list[PricingResponse])
@@ -97,12 +108,9 @@ async def create_checkout(
     client: LemonSqueezyClient = Depends(get_billing_client),
 ) -> CheckoutResponse:
     """Create a checkout session for subscription.
-    
+
     Returns a URL to redirect the user to Lemon Squeezy checkout.
     """
-    if not LEMONSQUEEZY_STORE_ID:
-        raise HTTPException(500, "Billing not configured")
-    
     # Map tier to variant ID
     variant_id = None
     if request.tier == "team":
@@ -144,7 +152,7 @@ async def create_checkout(
 async def get_subscription() -> SubscriptionResponse:
     """Get current user's subscription."""
     # TODO: Get user ID from authenticated session
-    user_id = "user_123"
+    _user_id = "user_123"
     
     # TODO: Get from database
     # For now, return free tier
