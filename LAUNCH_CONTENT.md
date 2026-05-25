@@ -1,33 +1,33 @@
-# AgentGuard 发布文案
+# AI Output Guard 发布文案
 
 ## Twitter/X
 
 ```
-🚀 发布了 AgentGuard — AI 输出安全中间件
+🚀 发布了 AI Output Guard — AI 输出安全中间件
 
 LLM 输出不可靠？JSON 缺失、幻觉 API、绕过权限...
 
-AgentGuard 用三层递进校验（结构→语义→策略）在 AI 输出到达系统前拦截问题
+AI Output Guard 用三层递进校验（结构→语义→策略）在 AI 输出到达系统前拦截问题
 
 ✅ Schema Guard — 自动修复 JSON 错误
 ✅ Semantic Guard — 33 种危险意图检测
 ✅ Policy Guard — YAML DSL 策略引擎
 
-pip install agentguard 即可体验
+pip install ai-output-guard 即可体验
 
-⭐ https://github.com/Churman1113/AgentGuard
+⭐ https://github.com/Churman1113/ai-output-guard
 ```
 
 ## Hacker News
 
 ```
-标题：Show HN: AgentGuard — AI output safety middleware for LLMs
+标题：Show HN: AI Output Guard — AI output safety middleware for LLMs
 
 正文：
 
 Hey HN! 👋
 
-I've been working on AgentGuard, an AI output safety middleware that sits between LLMs and your systems.
+I've been working on AI Output Guard, an AI output safety middleware that sits between LLMs and your systems.
 
 The problem: LLM outputs are unreliable. JSON missing fields, hallucinated APIs, permission bypasses — any of these can cause production incidents.
 
@@ -57,7 +57,7 @@ Supports 5 distribution forms:
 - API Proxy (zero code change)
 - VS Code Extension (editor diagnostics)
 
-Demo: https://github.com/Churman1113/AgentGuard
+Demo: https://github.com/Churman1113/ai-output-guard
 
 Would love your feedback!
 ```
@@ -65,13 +65,13 @@ Would love your feedback!
 ## Reddit (r/LocalLLaMA / r/MachineLearning)
 
 ```
-标题: [Project] AgentGuard — "The seatbelt between LLMs and your systems"
+标题: [Project] AI Output Guard — "The seatbelt between LLMs and your systems"
 
 正文：
 
 Hey everyone! 👋
 
-Built AgentGuard to solve a real problem I've been facing: LLM outputs are unpredictable and can cause real damage in production.
+Built AI Output Guard to solve a real problem I've been facing: LLM outputs are unpredictable and can cause real damage in production.
 
 **What it does:**
 Three-layer validation pipeline that intercepts LLM outputs before they reach your systems:
@@ -87,7 +87,7 @@ Most solutions only handle one layer:
 - guardrails-ai (6.9k ⭐) → only content filtering
 - NeMo Guardrails → only dialogue control
 
-AgentGuard's progressive pipeline means:
+AI Output Guard's progressive pipeline means:
 - If structure is wrong, don't bother checking semantics
 - If semantics are dangerous, don't check policies
 
@@ -101,17 +101,17 @@ result = guard.validate('{"action": "DROP TABLE users"}')
 
 **Install:**
 ```bash
-pip install agentguard
+pip install ai-output-guard
 ```
 
-GitHub: https://github.com/Churman1113/AgentGuard
+GitHub: https://github.com/Churman1113/ai-output-guard
 
 Feedback welcome! 🙏
 ```
 
 ## Buy Me a Coffee / GitHub Sponsors
 
-如果你觉得 AgentGuard 有帮助：
+如果你觉得 AI Output Guard 有帮助：
 
 - GitHub Sponsors: https://github.com/sponsors/Churman1113
-- Buy Me a Coffee: https://buymeacoffee.com/agentguard
+- Buy Me a Coffee: https://buymeacoffee.com/ai-output-guard

@@ -1,4 +1,4 @@
-"""AgentGuard HTTP API — FastAPI sub-application.
+"""AI Output Guard HTTP API — FastAPI sub-application.
 
 Provides a REST API for the guard engine, enabling non-Python clients
 (notably the TypeScript LSP Server) to invoke guard validation over HTTP.
@@ -24,7 +24,7 @@ def create_app(policy_path: Optional[str] = None) -> FastAPI:
         Configured FastAPI application ready to serve.
     """
     app = FastAPI(
-        title="AgentGuard API",
+        title="AI Output Guard API",
         description="AI output safety middleware — HTTP API for guard validation",
         version="0.1.0",
     )

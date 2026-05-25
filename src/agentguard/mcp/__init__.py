@@ -1,6 +1,6 @@
-"""MCP (Model Context Protocol) Server for AgentGuard.
+"""MCP (Model Context Protocol) Server for AI Output Guard.
 
-Implements JSON-RPC 2.0 over stdio transport, exposing AgentGuard
+Implements JSON-RPC 2.0 over stdio transport, exposing AI Output Guard
 as MCP Tools and Resources for AI IDEs (Cursor, Copilot, Claude Code, etc.).
 """
 

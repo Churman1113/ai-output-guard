@@ -1,1 +1,1 @@
-"""AgentGuard CLI."""
+"""AI Output Guard CLI."""

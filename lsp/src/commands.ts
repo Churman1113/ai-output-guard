@@ -1,5 +1,5 @@
 /**
- * AgentGuard VS Code extension commands.
+ * AI Output Guard VS Code extension commands.
  *
  * Provides commands for manual validation, audit log viewing, and configuration.
  * Communicates with the Python guard daemon (Phase 3a) over HTTP.
@@ -10,7 +10,7 @@ import { GuardDiagnostics } from "./diagnostics";
 import { fetchAudit, fetchStatus } from "./guardClient";
 
 /**
- * Register all AgentGuard extension commands.
+ * Register all AI Output Guard extension commands.
  *
  * @param context - VS Code extension context.
  * @param diagnostics - Guard diagnostics provider.
@@ -27,7 +27,7 @@ export function registerCommands(
         const editor = vscode.window.activeTextEditor;
         if (!editor) {
           vscode.window.showInformationMessage(
-            "AgentGuard: No active editor to validate"
+            "AI Output Guard: No active editor to validate"
           );
           return;
         }
@@ -35,7 +35,7 @@ export function registerCommands(
         const selection = editor.selection;
         if (selection.isEmpty) {
           vscode.window.showInformationMessage(
-            "AgentGuard: Select some text to validate"
+            "AI Output Guard: Select some text to validate"
           );
           return;
         }
@@ -48,19 +48,19 @@ export function registerCommands(
         if (result) {
           if (result.passed) {
             vscode.window.showInformationMessage(
-              `AgentGuard: Output passed all safety checks (${result.latency_ms.toFixed(1)}ms)`
+              `AI Output Guard: Output passed all safety checks (${result.latency_ms.toFixed(1)}ms)`
             );
           } else if (result.blocked) {
             vscode.window.showWarningMessage(
-              `AgentGuard: Output blocked by ${result.blocked_by} layer`
+              `AI Output Guard: Output blocked by ${result.blocked_by} layer`
             );
           } else if (result.level === "fix") {
             vscode.window.showInformationMessage(
-              `AgentGuard: Output was auto-fixed (${result.latency_ms.toFixed(1)}ms)`
+              `AI Output Guard: Output was auto-fixed (${result.latency_ms.toFixed(1)}ms)`
             );
           } else {
             vscode.window.showWarningMessage(
-              `AgentGuard: ${result.level} — ${result.checks.map((c) => c.message).join("; ")}`
+              `AI Output Guard: ${result.level} — ${result.checks.map((c) => c.message).join("; ")}`
             );
           }
         }
@@ -76,14 +76,14 @@ export function registerCommands(
         const editor = vscode.window.activeTextEditor;
         if (!editor) {
           vscode.window.showInformationMessage(
-            "AgentGuard: No active file to validate"
+            "AI Output Guard: No active file to validate"
           );
           return;
         }
 
         await diagnostics.validateDocument(editor.document);
         vscode.window.showInformationMessage(
-          "AgentGuard: File validation complete — check Problems panel for results"
+          "AI Output Guard: File validation complete — check Problems panel for results"
         );
       }
     )
@@ -94,9 +94,9 @@ export function registerCommands(
     vscode.commands.registerCommand(
       "agentguard.showAudit",
       async () => {
-        const panel = vscode.window.createOutputChannel("AgentGuard Audit");
+        const panel = vscode.window.createOutputChannel("AI Output Guard Audit");
         panel.clear();
-        panel.appendLine("AgentGuard Audit Log");
+        panel.appendLine("AI Output Guard Audit Log");
         panel.appendLine("═".repeat(50) + "\n");
 
         try {
@@ -133,7 +133,7 @@ export function registerCommands(
         } catch (err) {
           panel.appendLine(`Failed to fetch audit log: ${err}`);
           panel.appendLine("");
-          panel.appendLine("Make sure the AgentGuard daemon is running:");
+          panel.appendLine("Make sure the AI Output Guard daemon is running:");
           panel.appendLine("  $ agentguard-daemon");
         }
 
@@ -149,7 +149,7 @@ export function registerCommands(
       () => {
         diagnostics.clear();
         vscode.window.showInformationMessage(
-          "AgentGuard: Diagnostics cleared"
+          "AI Output Guard: Diagnostics cleared"
         );
       }
     )

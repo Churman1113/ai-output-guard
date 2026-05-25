@@ -1,5 +1,5 @@
 /**
- * AgentGuard HTTP API client — communicates with the Python guard daemon.
+ * AI Output Guard HTTP API client — communicates with the Python guard daemon.
  *
  * Calls the Phase 3a FastAPI server (agentguard-daemon) over HTTP.
  * Uses Node.js built-in fetch (available since Node 18).
@@ -16,7 +16,7 @@ export interface GuardCheck {
 }
 
 /**
- * Result from the AgentGuard validation pipeline.
+ * Result from the AI Output Guard validation pipeline.
  */
 export interface GuardResult {
   passed: boolean;
@@ -67,7 +67,7 @@ export interface GuardStatus {
  * Configuration for the Guard HTTP client.
  */
 export interface GuardConfig {
-  /** URL of the AgentGuard daemon (default: http://127.0.0.1:8765) */
+  /** URL of the AI Output Guard daemon (default: http://127.0.0.1:8765) */
   guardDaemonUrl: string;
   /** Path to a YAML policy file */
   policyPath?: string;
@@ -78,7 +78,7 @@ export interface GuardConfig {
 }
 
 /**
- * Validate AI-generated text through the AgentGuard HTTP API.
+ * Validate AI-generated text through the AI Output Guard HTTP API.
  *
  * Calls POST /api/v1/validate on the guard daemon.
  *
@@ -106,7 +106,7 @@ export async function validate(
 
   if (!response.ok) {
     throw new Error(
-      `AgentGuard daemon error (${response.status}): ${await response.text()}`
+      `AI Output Guard daemon error (${response.status}): ${await response.text()}`
     );
   }
 
@@ -142,7 +142,7 @@ export async function fetchAudit(
 
   if (!response.ok) {
     throw new Error(
-      `AgentGuard audit error (${response.status}): ${await response.text()}`
+      `AI Output Guard audit error (${response.status}): ${await response.text()}`
     );
   }
 
@@ -166,7 +166,7 @@ export async function fetchStatus(config: GuardConfig): Promise<GuardStatus> {
 
   if (!response.ok) {
     throw new Error(
-      `AgentGuard status error (${response.status}): ${await response.text()}`
+      `AI Output Guard status error (${response.status}): ${await response.text()}`
     );
   }
 

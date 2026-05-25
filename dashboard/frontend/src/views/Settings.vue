@@ -90,7 +90,7 @@ onMounted(() => {
   <div>
     <header class="mb-8">
       <h2 class="text-2xl font-bold text-gray-900">Settings</h2>
-      <p class="text-gray-500 mt-1">AgentGuard configuration and diagnostics</p>
+      <p class="text-gray-500 mt-1">AI Output Guard configuration and diagnostics</p>
     </header>
 
     <!-- 加载状态 -->
@@ -257,10 +257,10 @@ onMounted(() => {
 
             <div class="pt-4 border-t border-gray-100">
               <p class="text-xs text-gray-400">
-                AgentGuard — AI Output Safety Middleware
+                AI Output Guard — AI Output Safety Middleware
               </p>
               <p class="text-xs text-gray-400 mt-1">
-                MIT License — github.com/agentguard/agentguard
+                MIT License — github.com/Churman1113/ai-output-guard
               </p>
             </div>
           </div>

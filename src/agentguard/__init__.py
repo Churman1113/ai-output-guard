@@ -1,4 +1,4 @@
-"""AgentGuard — AI Output Safety Engine.
+"""AI Output Guard — AI Output Safety Engine.
 
 Three-layer progressive guard: Schema -> Semantic -> Policy.
 """

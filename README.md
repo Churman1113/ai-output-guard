@@ -1,19 +1,19 @@
-# AgentGuard
+# AI Output Guard
 
 **AI Output Safety Engine — The seatbelt between LLMs and your systems**
 
 [![Python](https://img.shields.io/badge/python-%3E%3D3.9-blue)](https://python.org)
 [![Tests](https://img.shields.io/badge/tests-479%20passed-green)](tests/)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
-[![GitHub Stars](https://img.shields.io/github/stars/Churman1113/AgentGuard?style=social)](https://github.com/Churman1113/AgentGuard)
+[![GitHub Stars](https://img.shields.io/github/stars/Churman1113/ai-output-guard?style=social)](https://github.com/Churman1113/ai-output-guard)
 
 ---
 
-## Why AgentGuard?
+## Why AI Output Guard?
 
 LLM outputs are unreliable. Missing JSON fields, hallucinated APIs, permission bypasses — any of these can cause production incidents.
 
-AgentGuard provides a **three-layer progressive validation pipeline** (Schema → Semantic → Policy) to catch problems before AI output reaches your systems.
+AI Output Guard provides a **three-layer progressive validation pipeline** (Schema → Semantic → Policy) to catch problems before AI output reaches your systems.
 
 ```
 LLM Output  ──→  [Schema Guard]  ──→  [Semantic Guard]  ──→  [Policy Guard]  ──→  Safe Output
@@ -27,13 +27,13 @@ LLM Output  ──→  [Schema Guard]  ──→  [Semantic Guard]  ──→  [
 
 ```bash
 # Core (Python SDK + CLI)
-pip install agentguard
+pip install ai-output-guard
 
 # With semantic enhancement (sentence-transformers)
-pip install agentguard[semantic]
+pip install ai-output-guard[semantic]
 
 # All extras (proxy, API, semantic)
-pip install agentguard[all]
+pip install ai-output-guard[all]
 ```
 
 ### Use
@@ -147,7 +147,7 @@ agentguard policy validate policies/prod.yaml
 
 ## Distribution
 
-AgentGuard can be used in 5 ways, covering every scenario:
+AI Output Guard can be used in 5 ways, covering every scenario:
 
 | Form | Use Case | Integration |
 |:---|:---|:---|
@@ -164,12 +164,12 @@ AgentGuard can be used in 5 ways, covering every scenario:
 docker run -d -p 8080:8080 \
   -v $(pwd)/policy.yaml:/policies/policy.yaml \
   -e AGENTGUARD_POLICY=/policies/policy.yaml \
-  agentguard/proxy:latest
+  ai-output-guard/proxy:latest
 
 # Client config (zero code)
 export HTTP_PROXY=http://localhost:8080
 export HTTPS_PROXY=http://localhost:8080
-# All LLM API calls are now validated by AgentGuard
+# All LLM API calls are now validated by AI Output Guard
 ```
 
 ## Project Structure
@@ -224,9 +224,9 @@ agentguard/
 
 ## Support Us
 
-If AgentGuard is useful to you, please give us a ⭐!
+If AI Output Guard is useful to you, please give us a ⭐!
 
-[![GitHub Stars](https://img.shields.io/github/stars/Churman1113/AgentGuard?style=social)](https://github.com/Churman1113/AgentGuard)
+[![GitHub Stars](https://img.shields.io/github/stars/Churman1113/ai-output-guard?style=social)](https://github.com/Churman1113/ai-output-guard)
 
 ## License
 

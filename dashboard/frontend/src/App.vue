@@ -29,7 +29,7 @@ onMounted(async () => {
   try {
     status.value = await getStatus();
   } catch (e) {
-    error.value = "Cannot connect to AgentGuard API. Make sure the server is running on port 8765.";
+    error.value = "Cannot connect to AI Output Guard API. Make sure the server is running on port 8765.";
   } finally {
     loading.value = false;
   }
@@ -46,7 +46,7 @@ function isActive(path: string): boolean {
     <aside class="w-64 bg-white border-r border-gray-200 flex flex-col">
       <div class="p-6 border-b border-gray-100">
         <h1 class="text-xl font-bold text-gray-900 flex items-center gap-2">
-          🛡️ AgentGuard
+          🛡️ AI Output Guard
         </h1>
         <p class="text-xs text-gray-500 mt-1">AI Output Safety Dashboard</p>
       </div>

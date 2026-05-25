@@ -1,6 +1,6 @@
 FROM python:3.11-slim
 
-LABEL org.opencontainers.image.title="AgentGuard API Proxy"
+LABEL org.opencontainers.image.title="AI Output Guard API Proxy"
 LABEL org.opencontainers.image.description="Zero-intrusion safety proxy for LLM API calls"
 LABEL org.opencontainers.image.version="0.1.0"
 LABEL org.opencontainers.image.licenses="MIT"

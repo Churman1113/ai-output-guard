@@ -1,4 +1,4 @@
-/** API response types for AgentGuard Dashboard */
+/** API response types for AI Output Guard Dashboard */
 
 export interface GuardCheck {
   layer: string;

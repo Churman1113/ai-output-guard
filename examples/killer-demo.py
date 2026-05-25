@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
-AgentGuard Killer Demo — 5 分钟展示三层递进校验
+AI Output Guard Killer Demo — 5 分钟展示三层递进校验
 
 运行方式:
-    pip install agentguard
+    pip install ai-output-guard
     python killer-demo.py
 
 或（开发中，直接从源码运行）:
@@ -15,7 +15,7 @@ import time
 from typing import Optional
 
 # ──────────────────────────────────────────────
-# 模拟 AgentGuard 核心（开发完成前用此模拟）
+# 模拟 AI Output Guard 核心（开发完成前用此模拟）
 # ──────────────────────────────────────────────
 
 class GuardLevel:
@@ -27,7 +27,7 @@ class GuardLevel:
 
 
 class DemoGuard:
-    """AgentGuard 模拟实现 — 用于 Demo 展示"""
+    """AI Output Guard 模拟实现 — 用于 Demo 展示"""
 
     # ── 内置规则 ──
     DANGEROUS_RULES = {
@@ -204,7 +204,7 @@ def main():
     print("""
 ╔══════════════════════════════════════════════════════════════╗
 ║                                                              ║
-║   🛡️  AgentGuard — AI 输出安全引擎 Demo                      ║
+║   🛡️  AI Output Guard — AI 输出安全引擎 Demo                      ║
 ║                                                              ║
 ║   三层递进校验: Schema → Semantic → Policy                   ║
 ║   The seatbelt between LLMs and your systems                ║
@@ -299,7 +299,7 @@ def main():
    • 策略灵活：YAML 声明式策略，支持 deny/allow/ask_human
 
 🚀 5 分钟上手：
-   pip install agentguard
+   pip install ai-output-guard
    from agentguard import Guard
    guard = Guard(schema=MyModel, semantic=True, policy="policy.yaml")
    result = guard.validate(llm_output)

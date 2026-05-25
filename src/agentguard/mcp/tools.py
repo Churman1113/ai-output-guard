@@ -1,4 +1,4 @@
-"""MCP Tool definitions for AgentGuard.
+"""MCP Tool definitions for AI Output Guard.
 
 Each tool is registered with a name, description, JSON Schema for inputs,
 and a handler function.
@@ -414,7 +414,7 @@ def _ts_to_iso(ts: float) -> str:
 
 TOOL_REGISTRY: dict[str, dict[str, Any]] = {
     "guard_validate": {
-        "description": "Validate AI-generated output through the AgentGuard safety pipeline. Returns whether the output passed, was blocked, or was auto-fixed.",
+        "description": "Validate AI-generated output through the AI Output Guard safety pipeline. Returns whether the output passed, was blocked, or was auto-fixed.",
         "inputSchema": {
             "type": "object",
             "properties": {
@@ -455,7 +455,7 @@ TOOL_REGISTRY: dict[str, dict[str, Any]] = {
         "handler": tool_guard_fix,
     },
     "guard_set_policy": {
-        "description": "Dynamically update the AgentGuard policy with new YAML rules.",
+        "description": "Dynamically update the AI Output Guard policy with new YAML rules.",
         "inputSchema": {
             "type": "object",
             "properties": {
@@ -482,7 +482,7 @@ TOOL_REGISTRY: dict[str, dict[str, Any]] = {
         "handler": tool_guard_reload_policy,
     },
     "guard_list_policies": {
-        "description": "Scan a directory for available AgentGuard policy YAML files. Returns a list with rules count and version for each.",
+        "description": "Scan a directory for available AI Output Guard policy YAML files. Returns a list with rules count and version for each.",
         "inputSchema": {
             "type": "object",
             "properties": {
@@ -525,7 +525,7 @@ TOOL_REGISTRY: dict[str, dict[str, Any]] = {
         "handler": tool_guard_get_audit,
     },
     "guard_status": {
-        "description": "Report the current AgentGuard configuration, active layers, and policy status.",
+        "description": "Report the current AI Output Guard configuration, active layers, and policy status.",
         "inputSchema": {
             "type": "object",
             "properties": {},

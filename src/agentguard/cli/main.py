@@ -1,4 +1,4 @@
-"""AgentGuard CLI — command-line interface for guard validation.
+"""AI Output Guard CLI — command-line interface for guard validation.
 
 Usage:
     agentguard check '{"action": "DROP TABLE users"}'
@@ -52,7 +52,7 @@ def _print_result(result, verbose: bool = False):
     # Result banner
     console.print(Panel(
         Text(f"  {result.level.value.upper()}  ", style=f"bold white on {color}"),
-        title="AgentGuard Result",
+        title="AI Output Guard Result",
         subtitle=f"latency: {result.metadata.get('latency_ms', 0)}ms",
     ))
 

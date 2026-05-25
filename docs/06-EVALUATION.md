@@ -1,6 +1,6 @@
-# AgentGuard — 评估与调优框架 v1.0
+# AI Output Guard — 评估与调优框架 v1.0
 
-> 如何衡量 AgentGuard 的准确性，以及如何系统化地调优误报和漏报。
+> 如何衡量 AI Output Guard 的准确性，以及如何系统化地调优误报和漏报。
 
 ---
 
@@ -131,7 +131,7 @@ agentguard evaluate --benchmark ./benchmark/ --output report.json
 
 ```
 ╔══════════════════════════════════════════════════════════════╗
-║  AgentGuard Evaluation Report                               ║
+║  AI Output Guard Evaluation Report                               ║
 ║  Benchmark: ./benchmark/  |  Mode: rule                     ║
 ╠══════════════════════════════════════════════════════════════╣
 ║                                                              ║

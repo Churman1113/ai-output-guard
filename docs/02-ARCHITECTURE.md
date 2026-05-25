@@ -1,4 +1,4 @@
-# AgentGuard — 架构设计文档 v2.0
+# AI Output Guard — 架构设计文档 v2.0
 
 > **v2.0 变更**：修复核心 bug、升级 Semantic Guard 方案、规范 Policy DSL、补充错误处理/安全/部署/测试/性能设计
 
@@ -163,7 +163,7 @@ from agentguard.result import GuardResult, GuardLevel
 from agentguard.errors import GuardError, GuardTimeoutError
 
 class Guard:
-    """AgentGuard 主入口 — 编排三层校验"""
+    """AI Output Guard 主入口 — 编排三层校验"""
 
     def __init__(
         self,
@@ -1043,11 +1043,11 @@ const severityMap = {
       { "id": "agentguard-policy", "extensions": [".agpolicy.yaml", ".agpolicy.yml"] }
     ],
     "commands": [
-      { "command": "agentguard.validate", "title": "AgentGuard: Validate Selection" },
-      { "command": "agentguard.showAudit", "title": "AgentGuard: Show Audit Log" }
+      { "command": "agentguard.validate", "title": "AI Output Guard: Validate Selection" },
+      { "command": "agentguard.showAudit", "title": "AI Output Guard: Show Audit Log" }
     ],
     "configuration": {
-      "title": "AgentGuard",
+      "title": "AI Output Guard",
       "properties": {
         "agentguard.policyPath": { "type": "string", "default": "" },
         "agentguard.semanticMode": { "type": "string", "enum": ["auto","rule","classifier","embedding"], "default": "rule" },
@@ -1107,7 +1107,7 @@ agentguard audit show <audit-id>
 
 ```
 ┌──────────┐    HTTP     ┌──────────────┐    HTTP    ┌──────────┐
-│ AI 工具   │───────────▶│ AgentGuard   │──────────▶│ LLM API  │
+│ AI 工具   │───────────▶│ AI Output Guard   │──────────▶│ LLM API  │
 │(Cursor等) │            │ API Proxy    │           │(OpenAI等) │
 └──────────┘            └──────┬───────┘           └──────────┘
                                │
@@ -1135,9 +1135,9 @@ agentguard audit show <audit-id>
 | 校验结果 | Proxy 行为 |
 |:---|:---|
 | PASS | 原样返回 LLM 响应 |
-| FIX | 替换 LLM 输出为修正后内容，添加 `X-AgentGuard-Fix` header |
-| WARN | 原样返回，添加 `X-AgentGuard-Warning` header |
-| DENY | 返回 HTTP 200 但替换内容为安全提示，添加 `X-AgentGuard-Blocked` header |
+| FIX | 替换 LLM 输出为修正后内容，添加 `X-AI Output Guard-Fix` header |
+| WARN | 原样返回，添加 `X-AI Output Guard-Warning` header |
+| DENY | 返回 HTTP 200 但替换内容为安全提示，添加 `X-AI Output Guard-Blocked` header |
 | ASK_HUMAN | 返回 HTTP 202（需要确认），Body 含确认信息 |
 
 **部署方式**：
@@ -1149,7 +1149,7 @@ docker run -d \
   -v ./policy.yaml:/app/policy.yaml \
   -e AGENTGUARD_POLICY=/app/policy.yaml \
   -e AGENTGUARD_SEMANTIC_MODE=rule \
-  agentguard/proxy:latest
+  ai-output-guard/proxy:latest
 
 # 客户端配置（零代码）
 export HTTP_PROXY=http://localhost:8080
@@ -1237,7 +1237,7 @@ LLM 输出（string）
     │         │
     ▼         ▼
   修改响应   替换内容+Header
-  (或原样)   (X-AgentGuard-*)
+  (或原样)   (X-AI Output Guard-*)
 ```
 
 ---
@@ -1270,14 +1270,14 @@ async def agent_step(prompt: str) -> AgentAction:
     result = guard.validate(raw_output, context={"agent": "openclaw"})
 
     if result.level == GuardLevel.DENY:
-        logger.warning(f"AgentGuard 拦截: {result.blocked_by} - {result.checks[-1].message}")
+        logger.warning(f"AI Output Guard 拦截: {result.blocked_by} - {result.checks[-1].message}")
         return AgentAction(action="blocked", target="", params={"reason": result.checks[-1].message})
     elif result.level == GuardLevel.FIX:
-        logger.info(f"AgentGuard 自动修正: {result.checks[0].message}")
+        logger.info(f"AI Output Guard 自动修正: {result.checks[0].message}")
         return AgentAction.model_validate_json(result.output)
     elif result.level == GuardLevel.ASK_HUMAN:
         # 在 Agent 循环中，可以回退到安全动作
-        logger.warning(f"AgentGuard 需人工确认: {result.checks[-1].message}")
+        logger.warning(f"AI Output Guard 需人工确认: {result.checks[-1].message}")
         return AgentAction(action="pending_approval", target="", params={"reason": result.checks[-1].message})
     else:
         return AgentAction.model_validate_json(result.output)
@@ -1290,7 +1290,7 @@ from langchain_core.output_parsers import PydanticOutputParser, OutputParserExce
 from agentguard import Guard, GuardLevel
 
 class GuardedOutputParser(PydanticOutputParser):
-    """LangChain 输出解析器 + AgentGuard 安全校验"""
+    """LangChain 输出解析器 + AI Output Guard 安全校验"""
 
     def __init__(self, pydantic_object, **guard_kwargs):
         super().__init__(pydantic_object=pydantic_object)
@@ -1300,7 +1300,7 @@ class GuardedOutputParser(PydanticOutputParser):
         result = self.guard.validate(text)
         if result.level == GuardLevel.DENY:
             raise OutputParserException(
-                f"AgentGuard 拦截: {result.blocked_by} — {result.checks[-1].message}"
+                f"AI Output Guard 拦截: {result.blocked_by} — {result.checks[-1].message}"
             )
         return super().parse(result.output or text)
 ```
@@ -1317,8 +1317,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Install AgentGuard
-        run: pip install agentguard
+      - name: Install AI Output Guard
+        run: pip install ai-output-guard
       - name: Check AI-generated files
         run: |
           # 检查 AI 生成的配置文件
@@ -1415,7 +1415,7 @@ Policy Guard 降级链:
   自定义规则 → 内置默认规则 → on_no_match 配置 → allow(WARN)
 
 API Proxy 降级链:
-  Guard 校验 → 超时/错误 → 原样转发(透明代理) + X-AgentGuard-Error header
+  Guard 校验 → 超时/错误 → 原样转发(透明代理) + X-AI Output Guard-Error header
 ```
 
 ### 8.3 统一异常定义
@@ -1548,9 +1548,9 @@ class PolicyWatcher:
 
 ```bash
 # 本地开发
-pip install agentguard
+pip install ai-output-guard
 # 或
-pip install agentguard[semantic]  # 含 Embedding 模型
+pip install ai-output-guard[semantic]  # 含 Embedding 模型
 ```
 
 ### 11.2 团队部署
@@ -1563,7 +1563,7 @@ docker compose up -d
 version: "3.8"
 services:
   proxy:
-    image: agentguard/proxy:latest
+    image: ai-output-guard/proxy:latest
     ports:
       - "8080:8080"
     volumes:
@@ -1576,7 +1576,7 @@ services:
       - audit-data:/data
 
   dashboard:
-    image: agentguard/dashboard:latest
+    image: ai-output-guard/dashboard:latest
     ports:
       - "3000:3000"
     environment:
@@ -1973,8 +1973,8 @@ class Guard:
 | jsonschema | JSON Schema 校验 | ≥4.0 | 必须 |
 | PyYAML | 策略文件解析 | ≥6.0 | 必须 |
 | numpy | 向量计算 | ≥1.24 | 可选（embedding模式） |
-| sentence-transformers | 本地 embedding 模型 | ≥2.2 | 可选（`pip install agentguard[semantic]`） |
-| fasttext-wheel | 轻量分类器 | ≥0.9.2 | 可选（`pip install agentguard[classifier]`） |
+| sentence-transformers | 本地 embedding 模型 | ≥2.2 | 可选（`pip install ai-output-guard[semantic]`） |
+| fasttext-wheel | 轻量分类器 | ≥0.9.2 | 可选（`pip install ai-output-guard[classifier]`） |
 
 ### 14.2 协议层
 

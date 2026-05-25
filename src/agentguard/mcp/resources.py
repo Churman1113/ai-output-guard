@@ -1,4 +1,4 @@
-"""MCP Resource definitions for AgentGuard.
+"""MCP Resource definitions for AI Output Guard.
 
 Resources are read-only data that AI IDEs can access, such as
 the current policy YAML and audit statistics.
@@ -11,7 +11,7 @@ from typing import Any
 
 
 def resource_policy(policy_path: str | None = None) -> str:
-    """Read and return the current AgentGuard policy as YAML/JSON."""
+    """Read and return the current AI Output Guard policy as YAML/JSON."""
     if not policy_path:
         return json.dumps({
             "status": "no_policy",
@@ -74,7 +74,7 @@ RESOURCE_REGISTRY: dict[str, dict[str, Any]] = {
     "policy": {
         "uri": "agentguard://policy",
         "name": "Current Policy",
-        "description": "The currently active AgentGuard policy rules in YAML format",
+        "description": "The currently active AI Output Guard policy rules in YAML format",
         "mimeType": "application/x-yaml",
         "handler": resource_policy,
     },

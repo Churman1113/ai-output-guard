@@ -1,11 +1,11 @@
 #!/bin/bash
-# Release script for AgentGuard
+# Release script for AI Output Guard
 # Usage: ./scripts/release.sh [patch|minor|major]
 
 set -e
 
 VERSION_BUMP=${1:-patch}
-echo "🚀 Releasing AgentGuard with $VERSION_BUMP version bump..."
+echo "🚀 Releasing AI Output Guard with $VERSION_BUMP version bump..."
 
 # Colors
 RED='\033[0;31m'

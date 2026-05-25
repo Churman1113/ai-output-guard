@@ -1,4 +1,4 @@
-# AgentGuard — 协议交互流程 v1.0
+# AI Output Guard — 协议交互流程 v1.0
 
 > MCP / LSP / API Proxy 三种协议的精确消息序列、请求/响应示例与生命周期管理。
 
@@ -9,7 +9,7 @@
 ### 1.1 连接生命周期
 
 ```
-IDE (Cursor/Claude Code)                    AgentGuard MCP Server
+IDE (Cursor/Claude Code)                    AI Output Guard MCP Server
         │                                            │
         │──── initialize ────────────────────────────▶│  握手
         │◀─── initialize response ──────────────────│
@@ -75,7 +75,7 @@ IDE (Cursor/Claude Code)                    AgentGuard MCP Server
     "tools": [
       {
         "name": "guard_validate",
-        "description": "Validate AI output through AgentGuard's three-layer progressive guard (Schema → Semantic → Policy). Returns pass/deny/fix/warn/ask_human result.",
+        "description": "Validate AI output through AI Output Guard's three-layer progressive guard (Schema → Semantic → Policy). Returns pass/deny/fix/warn/ask_human result.",
         "inputSchema": {
           "type": "object",
           "properties": {
@@ -131,7 +131,7 @@ IDE (Cursor/Claude Code)                    AgentGuard MCP Server
       },
       {
         "name": "guard_status",
-        "description": "Get current AgentGuard configuration and runtime status",
+        "description": "Get current AI Output Guard configuration and runtime status",
         "inputSchema": {
           "type": "object",
           "properties": {}
@@ -267,7 +267,7 @@ IDE (Cursor/Claude Code)                    AgentGuard MCP Server
 ### 2.1 连接生命周期
 
 ```
-VS Code / JetBrains                   AgentGuard LSP Server
+VS Code / JetBrains                   AI Output Guard LSP Server
         │                                      │
         │──── initialize ──────────────────────▶│
         │◀─── initialize response ─────────────│
@@ -354,7 +354,7 @@ VS Code / JetBrains                   AgentGuard LSP Server
           "end": { "line": 42, "character": 52 }
         },
         "severity": 1,
-        "source": "AgentGuard",
+        "source": "AI Output Guard",
         "code": "SEMANTIC_DROP_TABLE",
         "message": "🛑 Dangerous intent detected: drop_table\n\nThe AI output contains a DROP TABLE SQL statement.\nPattern: \\bDROP\\s+TABLE\\b\nConfidence: 100%",
         "relatedInformation": [
@@ -479,7 +479,7 @@ VS Code / JetBrains                   AgentGuard LSP Server
         "end": { "line": 42, "character": 0 }
       },
       "command": {
-        "title": "🛡️ AgentGuard: DENIED (drop_table)",
+        "title": "🛡️ AI Output Guard: DENIED (drop_table)",
         "command": "agentguard.showDetails",
         "arguments": ["ag-a1b2c3d4e5f6"]
       }
@@ -495,7 +495,7 @@ VS Code / JetBrains                   AgentGuard LSP Server
 ### 3.1 请求处理生命周期
 
 ```
-AI 工具 (Cursor)                   AgentGuard Proxy                  LLM API (OpenAI)
+AI 工具 (Cursor)                   AI Output Guard Proxy                  LLM API (OpenAI)
       │                                   │                                │
       │── POST /v1/chat/completions ─────▶│                                │
       │   (原始请求)                       │                                │
@@ -518,7 +518,7 @@ AI 工具 (Cursor)                   AgentGuard Proxy                  LLM API (
 ### 3.2 透明转发（非 LLM 请求）
 
 ```
-AI 工具                              AgentGuard Proxy
+AI 工具                              AI Output Guard Proxy
       │                                   │
       │── GET /api/some-endpoint ────────▶│
       │                                   │── 识别: 非 LLM API ──▶ 透传
@@ -550,7 +550,7 @@ POST /v1/chat/completions HTTP/1.1
 Host: api.openai.com
 Content-Type: application/json
 Authorization: Bearer sk-xxx
-X-AgentGuard-Request-Id: req-001
+X-AI Output Guard-Request-Id: req-001
 
 {
   "model": "gpt-4o",
@@ -582,17 +582,17 @@ Content-Type: application/json
 ```http
 HTTP/1.1 200 OK
 Content-Type: application/json
-X-AgentGuard-Status: blocked
-X-AgentGuard-Reason: semantic_drop_table
-X-AgentGuard-Audit-Id: ag-a1b2c3d4e5f6
-X-AgentGuard-Confidence: 1.0
+X-AI Output Guard-Status: blocked
+X-AI Output Guard-Reason: semantic_drop_table
+X-AI Output Guard-Audit-Id: ag-a1b2c3d4e5f6
+X-AI Output Guard-Confidence: 1.0
 
 {
   "id": "chatcmpl-abc123",
   "choices": [
     {
       "message": {
-        "content": "⚠️ [AgentGuard] This output was blocked: Dangerous intent detected (drop_table). The AI suggested a DROP TABLE statement which is prohibited by security policy. Audit ID: ag-a1b2c3d4e5f6"
+        "content": "⚠️ [AI Output Guard] This output was blocked: Dangerous intent detected (drop_table). The AI suggested a DROP TABLE statement which is prohibited by security policy. Audit ID: ag-a1b2c3d4e5f6"
       },
       "finish_reason": "stop"
     }
@@ -606,10 +606,10 @@ X-AgentGuard-Confidence: 1.0
 ```http
 HTTP/1.1 200 OK
 Content-Type: application/json
-X-AgentGuard-Status: fixed
-X-AgentGuard-Reason: schema_enum_fix
-X-AgentGuard-Audit-Id: ag-f1e2d3c4b5a6
-X-AgentGuard-Fix-Description: "DELTE" → "DELETE"
+X-AI Output Guard-Status: fixed
+X-AI Output Guard-Reason: schema_enum_fix
+X-AI Output Guard-Audit-Id: ag-f1e2d3c4b5a6
+X-AI Output Guard-Fix-Description: "DELTE" → "DELETE"
 
 {
   "id": "chatcmpl-abc123",
@@ -658,9 +658,9 @@ Host: localhost:8080
 **Guard 超时（Fail-Open）**：
 ```http
 HTTP/1.1 200 OK
-X-AgentGuard-Status: timeout
-X-AgentGuard-Warning: Guard validation timed out, passed through
-X-AgentGuard-Audit-Id: ag-t1m30ut0000
+X-AI Output Guard-Status: timeout
+X-AI Output Guard-Warning: Guard validation timed out, passed through
+X-AI Output Guard-Audit-Id: ag-t1m30ut0000
 
 { 原始 LLM 响应不变 }
 ```
@@ -671,7 +671,7 @@ HTTP/1.1 502 Bad Gateway
 Content-Type: application/json
 
 {
-  "error": "AgentGuard Proxy: Failed to reach upstream LLM API",
+  "error": "AI Output Guard Proxy: Failed to reach upstream LLM API",
   "upstream_url": "https://api.openai.com/v1/chat/completions",
   "request_id": "req-001"
 }
@@ -688,7 +688,7 @@ Content-Type: application/json
 - MCP: 在 tool result 文本中包含
 - LSP: 在 diagnostic.data.auditId 中包含
 - CLI: 在 JSON 输出和 human 格式中包含
-- API Proxy: 在 `X-AgentGuard-Audit-Id` Header 中包含
+- API Proxy: 在 `X-AI Output Guard-Audit-Id` Header 中包含
 
 ### 4.2 错误降级一致性
 

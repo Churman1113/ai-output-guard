@@ -1,4 +1,4 @@
-"""Billing module for AgentGuard — Lemon Squeezy integration.
+"""Billing module for AI Output Guard — Lemon Squeezy integration.
 
 Handles subscription management, checkout flows, and webhook processing.
 """

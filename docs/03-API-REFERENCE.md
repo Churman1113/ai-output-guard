@@ -1,6 +1,6 @@
-# AgentGuard — 公开 API 参考 v1.0
+# AI Output Guard — 公开 API 参考 v1.0
 
-> 本文档定义 AgentGuard 的完整公开接口。所有内部实现细节不在本文档范围内。
+> 本文档定义 AI Output Guard 的完整公开接口。所有内部实现细节不在本文档范围内。
 > 版本约定：遵循 SemVer，主版本号内保证向后兼容。
 
 ---
@@ -618,11 +618,11 @@ $ agentguard check --format table '{"endpoint": "/api/users", "method": "DELTE"}
 ### 10.2 可选依赖组
 
 ```bash
-pip install agentguard                    # 核心引擎（Schema + Semantic 规则模式 + Policy）
-pip install agentguard[semantic]          # + Embedding 模型（sentence-transformers）
-pip install agentguard[classifier]        # + 轻量分类器（fasttext-wheel）
-pip install agentguard[all]               # + 所有可选依赖
-pip install agentguard[dev]               # + 开发/测试工具
+pip install ai-output-guard                    # 核心引擎（Schema + Semantic 规则模式 + Policy）
+pip install ai-output-guard[semantic]          # + Embedding 模型（sentence-transformers）
+pip install ai-output-guard[classifier]        # + 轻量分类器（fasttext-wheel）
+pip install ai-output-guard[all]               # + 所有可选依赖
+pip install ai-output-guard[dev]               # + 开发/测试工具
 ```
 
 ### 10.3 框架集成包（计划中）
@@ -648,7 +648,7 @@ result = client.chat.completions.create(
     messages=[...],
 )
 
-# AgentGuard 等价写法（保留 instructor 的提取能力 + 增加安全层）
+# AI Output Guard 等价写法（保留 instructor 的提取能力 + 增加安全层）
 from agentguard import Guard
 raw = await llm.generate(prompt)
 result = Guard(schema=AgentAction, semantic=True, policy="policies/agent.yaml").validate(raw)
@@ -664,7 +664,7 @@ from guardrails import Guard as GRGuard
 gr = GRGuard.from_rail("spec.rail")
 result = gr(openai_client, prompt="...")
 
-# AgentGuard 等价写法（更简洁的三层递进）
+# AI Output Guard 等价写法（更简洁的三层递进）
 from agentguard import Guard
 guard = Guard(schema=AgentAction, semantic=True, policy="policies/agent.yaml")
 raw = await llm.generate(prompt)
@@ -679,7 +679,7 @@ define flow
   user ask about database
   bot refuse database access
 
-# AgentGuard 等价写法（YAML 声明式策略）
+# AI Output Guard 等价写法（YAML 声明式策略）
 # policies/agent.yaml
 rules:
   - name: "禁止数据库访问"

@@ -1,4 +1,4 @@
-"""Dashboard backend — serves the Vue 3 frontend and AgentGuard API.
+"""Dashboard backend — serves the Vue 3 frontend and AI Output Guard API.
 
 Usage:
     # Development (frontend on port 3000, API on port 8765)
@@ -44,7 +44,7 @@ def main():
     host = os.environ.get("AGENTGUARD_HOST", "127.0.0.1")
     port = int(os.environ.get("AGENTGUARD_PORT", "8765"))
 
-    print(f"[agentguard-dashboard] Starting on http://{host}:{port}", file=sys.stderr)
+    print(f"[ai-output-guard-dashboard] Starting on http://{host}:{port}", file=sys.stderr)
     uvicorn.run(
         "dashboard.backend.main:app",
         host=host,

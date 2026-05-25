@@ -1,4 +1,4 @@
-# AgentGuard PyPI 发布指南
+# AI Output Guard PyPI 发布指南
 
 ## 前置条件
 
@@ -9,7 +9,7 @@
 ## 步骤 1: 安装构建工具
 
 ```bash
-cd agentguard
+cd ai-output-guard
 pip install build twine
 ```
 
@@ -24,8 +24,8 @@ python -m build
 ```
 
 构建成功后，会生成：
-- `dist/agentguard-0.1.0-py3-none-any.whl`
-- `dist/agentguard-0.1.0.tar.gz`
+- `dist/ai_output_guard-0.1.0-py3-none-any.whl`
+- `dist/ai_output_guard-0.1.0.tar.gz`
 
 ## 步骤 3: 检查包
 
@@ -35,8 +35,8 @@ twine check dist/*
 
 应该看到：
 ```
-Checking dist/agentguard-0.1.0-py3-none-any.whl: PASSED
-Checking dist/agentguard-0.1.0.tar.gz: PASSED
+Checking dist/ai_output_guard-0.1.0-py3-none-any.whl: PASSED
+Checking dist/ai_output_guard-0.1.0.tar.gz: PASSED
 ```
 
 ## 步骤 4: 上传到 Test PyPI（可选但推荐）
@@ -67,7 +67,7 @@ twine upload dist/*
 
 ```bash
 # 等待几分钟让 PyPI 索引更新
-pip install agentguard
+pip install ai-output-guard
 
 # 测试 CLI
 agentguard --help

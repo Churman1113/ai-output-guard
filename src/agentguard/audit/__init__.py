@@ -1,1 +1,1 @@
-"""Audit logging for AgentGuard."""
+"""Audit logging for AI Output Guard."""

@@ -1,4 +1,4 @@
-"""API route handlers for the AgentGuard HTTP API.
+"""API route handlers for the AI Output Guard HTTP API.
 
 Each endpoint uses the shared Guard instance stored in app.state.guard,
 ensuring audit logs and state persist across requests.

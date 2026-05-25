@@ -1,5 +1,5 @@
 /**
- * AgentGuard VS Code Extension — AI output safety in your editor.
+ * AI Output Guard VS Code Extension — AI output safety in your editor.
  *
  * Detects dangerous LLM output (DROP TABLE, rm -rf, API key leaks, etc.)
  * and highlights them with VS Code diagnostics (red wavy lines).
@@ -10,9 +10,9 @@
  *
  * Commands:
  *   - Ctrl+Alt+G V / Right-click → Validate Selection
- *   - AgentGuard: Validate Current File
- *   - AgentGuard: Show Audit Log
- *   - AgentGuard: Clear All Diagnostics
+ *   - AI Output Guard: Validate Current File
+ *   - AI Output Guard: Show Audit Log
+ *   - AI Output Guard: Clear All Diagnostics
  *
  * Configuration (settings.json):
  *   - agentguard.guardDaemonUrl: URL of the guard daemon (default: http://127.0.0.1:8765)
@@ -42,12 +42,12 @@ function getConfig(): GuardConfig {
 }
 
 /**
- * Activate the AgentGuard extension.
+ * Activate the AI Output Guard extension.
  *
  * @param context - VS Code extension context.
  */
 export async function activate(context: vscode.ExtensionContext): Promise<void> {
-  console.log("[AgentGuard] Activating extension...");
+  console.log("[AI Output Guard] Activating extension...");
 
   const config = getConfig();
   const diagnostics = new GuardDiagnostics(config);
@@ -56,7 +56,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
   const daemonAlive = await healthCheck(config);
   if (!daemonAlive) {
     const action = await vscode.window.showWarningMessage(
-      `AgentGuard daemon not reachable at ${config.guardDaemonUrl}. ` +
+      `AI Output Guard daemon not reachable at ${config.guardDaemonUrl}. ` +
       `Start it with: agentguard-daemon`,
       "Retry",
       "Configure URL"
@@ -70,16 +70,16 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
       );
     }
   } else {
-    console.log(`[AgentGuard] Daemon connected: ${config.guardDaemonUrl}`);
+    console.log(`[AI Output Guard] Daemon connected: ${config.guardDaemonUrl}`);
   }
 
   // Register diagnostics
   if (config.enableSemantic || config.policyPath) {
     diagnostics.activate(context);
-    console.log("[AgentGuard] Diagnostics active");
+    console.log("[AI Output Guard] Diagnostics active");
   } else {
     console.log(
-      "[AgentGuard] Diagnostics disabled — enable semantic or set policyPath"
+      "[AI Output Guard] Diagnostics disabled — enable semantic or set policyPath"
     );
   }
 
@@ -95,17 +95,17 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
         if (newConfig.enableSemantic || newConfig.policyPath) {
           diagnostics.activate(context);
         }
-        console.log("[AgentGuard] Configuration updated");
+        console.log("[AI Output Guard] Configuration updated");
       }
     })
   );
 
-  console.log("[AgentGuard] Extension activated successfully");
+  console.log("[AI Output Guard] Extension activated successfully");
 }
 
 /**
- * Deactivate the AgentGuard extension.
+ * Deactivate the AI Output Guard extension.
  */
 export function deactivate(): void {
-  console.log("[AgentGuard] Extension deactivated");
+  console.log("[AI Output Guard] Extension deactivated");
 }

@@ -1,4 +1,4 @@
-"""Shared test fixtures for AgentGuard."""
+"""Shared test fixtures for AI Output Guard."""
 import pytest
 from pydantic import BaseModel
 from typing import Literal

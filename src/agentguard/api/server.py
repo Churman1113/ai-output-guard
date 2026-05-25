@@ -1,6 +1,6 @@
 """Entry point for the agentguard-daemon command.
 
-Starts the AgentGuard HTTP API server. Reads AGENTGUARD_POLICY from
+Starts the AI Output Guard HTTP API server. Reads AGENTGUARD_POLICY from
 the environment variable for the policy file path.
 """
 
@@ -11,7 +11,7 @@ import sys
 
 
 def main():
-    """Start the AgentGuard HTTP API daemon."""
+    """Start the AI Output Guard HTTP API daemon."""
     import uvicorn
 
     policy_path = os.environ.get("AGENTGUARD_POLICY")

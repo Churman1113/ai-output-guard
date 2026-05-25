@@ -79,7 +79,7 @@ async function exportJSON() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `agentguard-audit-${Date.now()}.json`;
+    a.download = `ai-output-guard-audit-${Date.now()}.json`;
     a.click();
     URL.revokeObjectURL(url);
   } catch {
@@ -216,7 +216,7 @@ onMounted(() => {
       </div>
       <p class="text-gray-500 text-lg">No audit entries found.</p>
       <p class="text-gray-400 text-sm mt-1">
-        Entries will appear here once AgentGuard starts processing validations.
+        Entries will appear here once AI Output Guard starts processing validations.
       </p>
     </div>
 

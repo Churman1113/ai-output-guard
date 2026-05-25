@@ -9,7 +9,7 @@ from typing import Optional
 
 
 class SubscriptionTier(enum.Enum):
-    """Subscription tiers for AgentGuard."""
+    """Subscription tiers for AI Output Guard."""
     
     COMMUNITY = "community"
     TEAM = "team"

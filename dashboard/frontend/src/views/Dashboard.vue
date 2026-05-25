@@ -111,7 +111,7 @@ function badgeClass(level: string): string {
     <!-- Empty state -->
     <div v-else-if="!status && !audit" class="text-center py-12">
       <p class="text-gray-500">
-        ⚠️ Cannot connect to AgentGuard API.
+        ⚠️ Cannot connect to AI Output Guard API.
       </p>
       <p class="text-sm text-gray-400 mt-2">
         Start the API server with:
@@ -213,7 +213,7 @@ function badgeClass(level: string): string {
         <div class="card-header">Recent Validations</div>
         <div class="card-body">
           <div v-if="recentEntries.length === 0" class="text-gray-400 text-sm text-center py-8">
-            No validation data yet. Start using AgentGuard to see results here.
+            No validation data yet. Start using AI Output Guard to see results here.
           </div>
           <table v-else class="w-full text-sm">
             <thead>

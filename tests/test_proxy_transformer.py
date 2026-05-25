@@ -110,7 +110,7 @@ class TestTransformDeny:
         assert headers[HEADER_LEVEL] == "deny"
         # Content should be replaced with safety message
         content = transformed["choices"][0]["message"]["content"]
-        assert "AgentGuard" in content
+        assert "AI Output Guard" in content
         assert "blocked" in content
 
     def test_deny_anthropic_format(self):
@@ -119,7 +119,7 @@ class TestTransformDeny:
         transformed, headers, status = transform_response(body, ANTHROPIC_ROUTE, result)
         assert status == 200
         content = transformed["content"][0]["text"]
-        assert "AgentGuard" in content
+        assert "AI Output Guard" in content
 
     def test_deny_non_json_body(self):
         body_str = "raw text response"

@@ -3,7 +3,7 @@ version: "3.8"
 services:
   proxy:
     build: .
-    image: agentguard/proxy:latest
+    image: ai-output-guard/proxy:latest
     ports:
       - "8080:8080"
     volumes:

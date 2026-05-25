@@ -32,7 +32,7 @@ HEADER_LEVEL = f"{HEADER_PREFIX}-Level"
 BLOCKED_OUTPUT_MESSAGE = json.dumps({
     "role": "assistant",
     "content": (
-        "[This response was blocked by AgentGuard safety policy. "
+        "[This response was blocked by AI Output Guard safety policy. "
         "The AI-generated content was flagged as potentially unsafe. "
         "Please review your request and try again.]"
     ),
@@ -47,9 +47,9 @@ def _build_safety_notice(result: GuardResult) -> str:
         checks.append(f"  - [{c.level.value.upper()}] {c.layer}: {c.message}")
 
     return (
-        "[AgentGuard Safety Notice]\n"
+        "[AI Output Guard Safety Notice]\n"
         f"The following response was {'blocked' if result.blocked else 'modified'} "
-        f"by AgentGuard ({result.blocked_by or 'unknown'} layer).\n"
+        f"by AI Output Guard ({result.blocked_by or 'unknown'} layer).\n"
         f"Audit ID: {result.audit_id or 'N/A'}\n"
         "Details:\n"
         + "\n".join(checks)

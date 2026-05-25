@@ -1,5 +1,5 @@
 /**
- * Integration tests for the AgentGuard HTTP client.
+ * Integration tests for the AI Output Guard HTTP client.
  *
  * Spins up a mock HTTP server that mimics the Python guard daemon API
  * and tests all client functions: validate, fetchAudit, fetchStatus, healthCheck.
@@ -273,7 +273,7 @@ describe("GuardClient HTTP", () => {
       const badConfig = makeConfig({ guardDaemonUrl: `${serverUrl}/nonexistent` });
       await assert.rejects(
         () => validate("test", badConfig),
-        /404|AgentGuard daemon error/
+        /404|AI Output Guard daemon error/
       );
     });
 

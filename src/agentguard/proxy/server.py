@@ -2,7 +2,7 @@
 
 Acts as a transparent HTTP forward proxy. AI tools point their HTTP_PROXY
 to this server, and all LLM API calls are automatically intercepted,
-validated by AgentGuard, and either passed through, modified, or blocked.
+validated by AI Output Guard, and either passed through, modified, or blocked.
 
 Usage:
     # Docker (recommended)
@@ -56,7 +56,7 @@ def create_app(
             await interceptor.close()
 
     app = FastAPI(
-        title="AgentGuard API Proxy",
+        title="AI Output Guard API Proxy",
         description="Zero-intrusion safety proxy for LLM API calls",
         version="0.1.0",
         lifespan=lifespan,

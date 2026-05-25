@@ -1,4 +1,4 @@
-"""Exception hierarchy for AgentGuard."""
+"""Exception hierarchy for AI Output Guard."""
 
 from __future__ import annotations
 
@@ -6,7 +6,7 @@ from typing import Any
 
 
 class GuardError(Exception):
-    """Base exception for all AgentGuard errors."""
+    """Base exception for all AI Output Guard errors."""
     pass
 
 

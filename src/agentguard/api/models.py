@@ -1,4 +1,4 @@
-"""Pydantic models for the AgentGuard HTTP API.
+"""Pydantic models for the AI Output Guard HTTP API.
 
 Defines request/response schemas for validate, audit, and status endpoints.
 """

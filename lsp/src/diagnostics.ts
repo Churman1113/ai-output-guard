@@ -1,5 +1,5 @@
 /**
- * AgentGuard diagnostics provider for VS Code.
+ * AI Output Guard diagnostics provider for VS Code.
  *
  * Maintains a diagnostic collection for each open text document.
  * On document change, debounces a Guard validation and reports
@@ -21,7 +21,7 @@ const LEVEL_SEVERITY: Record<string, vscode.DiagnosticSeverity> = {
 };
 
 /**
- * AgentGuard diagnostics provider.
+ * AI Output Guard diagnostics provider.
  *
  * Usage:
  *   const provider = new GuardDiagnostics(context, config);
@@ -101,7 +101,7 @@ export class GuardDiagnostics {
       this._updateDiagnostics(document, result);
     } catch (err) {
       // CLI not available — skip silently
-      console.warn(`[AgentGuard] Validation failed: ${err}`);
+      console.warn(`[AI Output Guard] Validation failed: ${err}`);
     }
   }
 
@@ -123,7 +123,7 @@ export class GuardDiagnostics {
       return result;
     } catch (err) {
       vscode.window.showErrorMessage(
-        `AgentGuard validation failed: ${err}`
+        `AI Output Guard validation failed: ${err}`
       );
       return null;
     }
@@ -164,10 +164,10 @@ export class GuardDiagnostics {
       const severity = LEVEL_SEVERITY[check.level] ?? vscode.DiagnosticSeverity.Warning;
       const diagnostic = new vscode.Diagnostic(
         new vscode.Range(0, 0, document.lineCount - 1, 0),
-        `[AgentGuard] ${check.message}`,
+        `[AI Output Guard] ${check.message}`,
         severity
       );
-      diagnostic.source = "AgentGuard";
+      diagnostic.source = "AI Output Guard";
       diagnostic.code = check.layer;
       diagnostic.tags = [vscode.DiagnosticTag.Unnecessary];
 
@@ -204,10 +204,10 @@ export class GuardDiagnostics {
 
       const diagnostic = new vscode.Diagnostic(
         range,
-        `[AgentGuard] ${check.message}`,
+        `[AI Output Guard] ${check.message}`,
         severity
       );
-      diagnostic.source = "AgentGuard";
+      diagnostic.source = "AI Output Guard";
       diagnostic.code = check.layer;
       diagnostic.tags = [vscode.DiagnosticTag.Unnecessary];
 

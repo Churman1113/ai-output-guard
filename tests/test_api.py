@@ -1,4 +1,4 @@
-"""Tests for the AgentGuard HTTP API endpoints.
+"""Tests for the AI Output Guard HTTP API endpoints.
 
 Uses FastAPI TestClient (httpx-backed) for end-to-end endpoint testing.
 """
